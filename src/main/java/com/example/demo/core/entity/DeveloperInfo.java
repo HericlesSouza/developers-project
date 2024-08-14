@@ -1,6 +1,5 @@
 package com.example.demo.core.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -28,8 +27,7 @@ public class DeveloperInfo {
     @Column(name = "preferred_os")
     private OSEnum preferredOS;
 
-    @OneToOne(mappedBy = "developerInfo", fetch = FetchType.LAZY, optional = false)
-    @JsonBackReference
+    @OneToOne(mappedBy = "developerInfo", optional = false)
     private Developer developer;
 
     public DeveloperInfo(LocalDate developerSince, OSEnum preferredOS, Developer developer) {

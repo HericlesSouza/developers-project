@@ -2,7 +2,6 @@ package com.example.demo.presentation.dto.developer;
 
 import com.example.demo.core.annotation.OptionalNotBlank;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,13 +1,13 @@
 package com.example.demo.core.entity;
 
-import com.example.demo.presentation.dto.developer.DeveloperCreateDTO;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,11 +31,13 @@ public class Developer {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "developer_infos_id", unique = true)
-    @JsonManagedReference
     private DeveloperInfo developerInfo;
 
-    public Developer(DeveloperCreateDTO data) {
-        this.name = data.getName();
-        this.email = data.getEmail();
+    @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Project> projects;
+
+    public Developer(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 }
