@@ -1,5 +1,6 @@
 package com.example.demo.presentation.exception;
 
+import com.example.demo.core.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, errorMessage);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        List<String> errors = List.of("Please use a different id to search.");
+        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), errors);
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

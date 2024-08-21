@@ -3,6 +3,8 @@ package com.example.demo.presentation.mapper;
 import com.example.demo.core.entity.Project;
 import com.example.demo.presentation.dto.project.ProjectCreateDTO;
 import com.example.demo.presentation.dto.project.ProjectDTO;
+import com.example.demo.presentation.dto.project.ProjectDateInfo;
+import com.example.demo.presentation.dto.project.ProjectUpdateDTO;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -19,15 +21,15 @@ public class ProjectMapper {
         return modelMapper.map(project, ProjectDTO.class);
     }
 
-    public <T> Project toProjectEntity(T dataDTO) {
+    public <T extends ProjectDateInfo> Project toProjectEntity(T dataDTO) {
         Project project = modelMapper.map(dataDTO, Project.class);
 
-        if (dataDTO instanceof ProjectCreateDTO projectCreateDTO) {
-            project.setStartDate(LocalDate.parse(projectCreateDTO.getStartDate()));
+        if (dataDTO instanceof ProjectCreateDTO || dataDTO instanceof ProjectUpdateDTO) {
+            Optional.ofNullable(dataDTO.getStartDate())
+                    .ifPresent(date -> project.setStartDate(LocalDate.parse(date)));
 
-            Optional.ofNullable(projectCreateDTO.getEndDate()).ifPresent(
-                    date -> project.setEndDate(LocalDate.parse(date))
-            );
+            Optional.ofNullable(dataDTO.getEndDate())
+                    .ifPresent(date -> project.setEndDate(LocalDate.parse(date)));
         }
 
         return project;

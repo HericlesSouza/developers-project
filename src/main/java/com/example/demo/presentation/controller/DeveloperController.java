@@ -77,8 +77,8 @@ public class DeveloperController {
             @Valid @RequestBody DeveloperUpdateDTO data
     ) {
         Developer developer = this.developerMapper.toDeveloperEntity(data);
-        Developer developerCreated = this.developerUseCase.update(id, developer);
-        DeveloperDTO developerDTO = this.developerMapper.toDeveloperDTO(developerCreated);
+        Developer developerUpdated = this.developerUseCase.update(id, developer);
+        DeveloperDTO developerDTO = this.developerMapper.toDeveloperDTO(developerUpdated);
         return ResponseEntity.ok().body(developerDTO);
     }
 
