@@ -2,20 +2,24 @@ package com.example.demo.core.useCase;
 
 import com.example.demo.core.entity.Developer;
 import com.example.demo.core.entity.Project;
+import com.example.demo.core.entity.Technology;
 import com.example.demo.core.exception.ResourceNotFoundException;
 import com.example.demo.core.repository.ProjectRepository;
+import com.example.demo.core.repository.TechnologyRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Service
 @RequiredArgsConstructor
 public class ProjectUseCase {
     private final ProjectRepository repository;
+    private final TechnologyRepository technologyRepository;
     private final DeveloperUseCase developerUseCase;
     private final ModelMapper modelMapper;
 
@@ -50,13 +54,39 @@ public class ProjectUseCase {
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.map(data, project);
 
-        this.repository.save(project);
-
-        return project;
+        return this.repository.save(project);
     }
 
     public void delete(Long id) {
         Project project = this.getById(id);
         this.repository.delete(project);
+    }
+
+    public Project createTechnologyToProject(Long id, String technologyName) {
+        Project project = this.getById(id);
+
+        Technology technology = this.technologyRepository.findByName(technologyName)
+                .orElseThrow(() -> new ResourceNotFoundException("Technology with name " + technologyName + " not found"));
+
+        Set<Technology> technologies = project.getTechnologies();
+        technologies.add(technology);
+        project.setTechnologies(technologies);
+
+        return this.repository.save(project);
+    }
+
+    public void deleteTechnologyFromProject(Long id, String technologyName) {
+        Project project = this.getById(id);
+
+        Set<Technology> technologies = project.getTechnologies();
+
+        Technology technologyToDelete = technologies.stream()
+                .filter(technology -> technology.getName().equalsIgnoreCase(technologyName))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Technology with name " + technologyName + " not found"));
+
+        technologies.remove(technologyToDelete);
+        project.setTechnologies(technologies);
+        this.repository.save(project);
     }
 }

@@ -1,10 +1,7 @@
 package com.example.demo.presentation.mapper;
 
 import com.example.demo.core.entity.Project;
-import com.example.demo.presentation.dto.project.ProjectCreateDTO;
-import com.example.demo.presentation.dto.project.ProjectDTO;
-import com.example.demo.presentation.dto.project.ProjectDateInfo;
-import com.example.demo.presentation.dto.project.ProjectUpdateDTO;
+import com.example.demo.presentation.dto.project.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -19,6 +16,10 @@ public class ProjectMapper {
 
     public ProjectDTO toProjectDTO(Project project) {
         return modelMapper.map(project, ProjectDTO.class);
+    }
+
+    public ProjectWithTechnologiesDTO toProjectWithTechnologiesDTO(Project project) {
+        return modelMapper.map(project, ProjectWithTechnologiesDTO.class);
     }
 
     public <T extends ProjectDateInfo> Project toProjectEntity(T dataDTO) {

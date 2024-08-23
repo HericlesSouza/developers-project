@@ -1,6 +1,5 @@
 package com.example.demo.presentation.mapper;
 
-import com.example.demo.core.entity.Developer;
 import com.example.demo.core.entity.DeveloperInfo;
 import com.example.demo.core.entity.OSEnum;
 import com.example.demo.presentation.dto.developerInfo.DeveloperInfoCreateDTO;

@@ -2,9 +2,7 @@ package com.example.demo.presentation.controller;
 
 import com.example.demo.core.entity.Project;
 import com.example.demo.core.useCase.ProjectUseCase;
-import com.example.demo.presentation.dto.project.ProjectCreateDTO;
-import com.example.demo.presentation.dto.project.ProjectDTO;
-import com.example.demo.presentation.dto.project.ProjectUpdateDTO;
+import com.example.demo.presentation.dto.project.*;
 import com.example.demo.presentation.mapper.ProjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +26,16 @@ public class ProjectController {
         return ResponseEntity.ok().body(projectDTO);
     }
 
+    @PostMapping("/{id}/technologies")
+    public ResponseEntity<ProjectWithTechnologiesDTO> createTechnologyToProject(
+            @RequestBody @Valid ProjectCreateTechnologyDTO projectCreateTechnologyDTO,
+            @PathVariable Long id
+    ) {
+        Project project = this.projectUseCase.createTechnologyToProject(id, projectCreateTechnologyDTO.getName());
+        ProjectWithTechnologiesDTO projectWithTechnologiesDTO = this.projectMapper.toProjectWithTechnologiesDTO(project);
+        return ResponseEntity.ok().body(projectWithTechnologiesDTO);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDTO> getById(@PathVariable Long id) {
         Project project = this.projectUseCase.getById(id);
@@ -36,12 +44,12 @@ public class ProjectController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProjectDTO>> getAll() {
+    public ResponseEntity<List<ProjectWithTechnologiesDTO>> getAll() {
         List<Project> projects = this.projectUseCase.getAll();
-        List<ProjectDTO> projectDTOS = projects.stream()
-                .map(this.projectMapper::toProjectDTO)
+        List<ProjectWithTechnologiesDTO> projectsWithTechnologiesDTO = projects.stream()
+                .map(this.projectMapper::toProjectWithTechnologiesDTO)
                 .toList();
-        return ResponseEntity.ok().body(projectDTOS);
+        return ResponseEntity.ok().body(projectsWithTechnologiesDTO);
     }
 
     @PatchMapping("/{id}")
@@ -58,6 +66,15 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         this.projectUseCase.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/technologies/{technologyName}")
+    public ResponseEntity<Void> deleteTechnologyFromProject(
+            @PathVariable Long id,
+            @PathVariable String technologyName
+    ) {
+        this.projectUseCase.deleteTechnologyFromProject(id, technologyName);
         return ResponseEntity.noContent().build();
     }
 }
