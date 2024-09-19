@@ -19,4 +19,7 @@ public class DeveloperCreateDTO {
         @NotBlank(message = "email is required")
         @Size(max = 50, message = "the size must be less than 50 characters")
         private String email;
+
+        @NotBlank(message = "password is required")
+        private String password;
 }

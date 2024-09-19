@@ -11,18 +11,18 @@ public class ApiError {
     private int status;
     private String message;
     private List<String> errors;
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     public ApiError(HttpStatus status, String message) {
         this.status = status.value();
         this.message = message;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
     }
 
     public ApiError(HttpStatus status, String message, List<String> errors) {
         this.status = status.value();
         this.message = message;
         this.errors = errors;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
     }
 }

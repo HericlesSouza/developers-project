@@ -19,4 +19,7 @@ public class DeveloperUpdateDTO {
         @OptionalNotBlank(message = "email must not be blank")
         @Email(message = "must be an email")
         private String email;
+
+        @OptionalNotBlank(message = "password must not be blank")
+        private String password;
 }

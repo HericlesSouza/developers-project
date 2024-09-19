@@ -21,7 +21,7 @@ public class DeveloperUseCase {
     public Developer create(Developer data) {
         this.validateEmailDoesNotExist(data.getEmail());
 
-        Developer developer = new Developer(data.getName(), data.getEmail());
+        Developer developer = new Developer(data.getName(), data.getEmail(), data.getPassword());
         this.repository.save(developer);
         return developer;
     }
@@ -60,7 +60,7 @@ public class DeveloperUseCase {
         this.repository.deleteById(id);
     }
 
-    private void validateEmailDoesNotExist(String email) {
+    public void validateEmailDoesNotExist(String email) {
         if (repository.existsByEmail(email)) {
             throw new EmailAlreadyExistsException("The email " + email + " already exists.");
         }
